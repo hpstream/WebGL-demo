@@ -1,0 +1,29 @@
+{
+  "name": "WebGL-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hpstream/WebGL-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hpstream/WebGL-demo/issues"
+  },
+  "homepage": "https://github.com/hpstream/WebGL-demo#readme",
+  "dependencies": {
+    "vite": "^2.8.6"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.21"
+  }
+}
