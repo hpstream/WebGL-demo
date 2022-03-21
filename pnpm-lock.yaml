@@ -2,9 +2,11 @@ lockfileVersion: 5.3
 
 specifiers:
   '@types/node': ^17.0.21
+  roughjs: ^4.5.2
   vite: ^2.8.6
 
 dependencies:
+  roughjs: 4.5.2
   vite: 2.8.6
 
 devDependencies:
@@ -255,12 +257,27 @@ packages:
     hasBin: true
     dev: false
 
+  /path-data-parser/0.1.0:
+    resolution: {integrity: sha1-j1ulzHD8e+yz3O+uoI4mWaumC4w=}
+    dev: false
+
   /path-parse/1.0.7:
     resolution: {integrity: sha1-+8EUtgykKzDZ2vWFjkvWi77bZzU=}
     dev: false
 
   /picocolors/1.0.0:
     resolution: {integrity: sha1-y1vcdP8/UYkiNur3nWi8RFZKuBw=}
+    dev: false
+
+  /points-on-curve/0.2.0:
+    resolution: {integrity: sha1-fbuYxDeRhZQ0KEdhMw+ok8uBtNE=}
+    dev: false
+
+  /points-on-path/0.2.1:
+    resolution: {integrity: sha1-VTICtUJMU77TcTWzGIWOrP+F3VI=}
+    dependencies:
+      path-data-parser: 0.1.0
+      points-on-curve: 0.2.0
     dev: false
 
   /postcss/8.4.12:
@@ -287,6 +304,14 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: false
+
+  /roughjs/4.5.2:
+    resolution: {integrity: sha512-2xSlLDKdsWyFxrveYWk9YQ/Y9UfK38EAMRNkYkMqYBJvPX8abCa9PN0x3w02H8Oa6/0bcZICJU+U95VumPqseg==}
+    dependencies:
+      path-data-parser: 0.1.0
+      points-on-curve: 0.2.0
+      points-on-path: 0.2.1
     dev: false
 
   /source-map-js/1.0.2:

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/hpstream/WebGL-demo#readme",
   "dependencies": {
+    "roughjs": "^4.5.2",
     "vite": "^2.8.6"
   },
   "devDependencies": {
