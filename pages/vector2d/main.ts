@@ -7,7 +7,7 @@ const ctx = canvas.getContext("2d");
 const rc = rough.canvas(canvas);
 import { Vector2D } from "./../../src/lib/index";
 
-ctx.translate(256, 512);
+ctx.translate(256, 256);
 ctx.scale(1, -1);
 ctx.lineCap = "round";
 
@@ -21,30 +21,36 @@ ctx.lineCap = "round";
 // console.log(v);
 // drawBranch(ctx, v0, 50, 10, Math.PI / 2, 3);
 const v0 = new Vector2D(0, 0);
+const segment = 60;
+let rad = (Math.PI * 2) / segment;
+let i = 0;
+// var v1 = drawBranch(ctx, v0, 100, 4, i++ * rad);
+setInterval(() => {
+  ctx.clearRect(-256, -256, 512, 512);
+  if (i >= 60) {
+    i = 0;
+  }
+  var v1 = drawBranch(ctx, v0, 100, 4, i++ * rad);
+}, 100);
+// var v1 = drawBranch(ctx, v0, 100, 10, i*rad);
+// drawBranch(ctx, v1, 20, 8, -Math.PI / 6 + Math.PI);
+// drawBranch(ctx, v1, 20, 8, Math.PI / 6 + Math.PI);
 
-drawBranch(ctx, v0, 50, 10, 1, 3);
 function drawBranch(
   context: CanvasRenderingContext2D,
   v0: Vector2D,
   length: number,
   thickness: number,
-  dir: number,
-  bias?: number
+  dir: number
 ) {
   const v = new Vector2D(1, 0).rotate(dir).scale(length);
   const v1 = v0.copy().add(v);
-  console.log(v, v1);
   context.lineWidth = thickness;
   // context.strokeStyle = "#000";
   context.beginPath();
   context.moveTo(v0.x, v0.y);
   context.lineTo(v1.x, v1.y);
   context.stroke();
-
-  if (thickness > 2) {
-    const left = dir + 0.2;
-    drawBranch(context, v1, length * 0.9, thickness * 0.8, left, bias * 0.9);
-    const right = dir - 0.2;
-    drawBranch(context, v1, length * 0.9, thickness * 0.8, right, bias * 0.9);
-  }
+  context.closePath();
+  return v1;
 }
