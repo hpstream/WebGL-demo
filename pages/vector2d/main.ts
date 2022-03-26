@@ -11,42 +11,71 @@ ctx.translate(256, 256);
 ctx.scale(1, -1);
 ctx.lineCap = "round";
 
-// var v0 = new Vector2D(2, 2);
-// var v1 = new Vector2D(1, 1);
-// console.log(v0.dot(v1)); // 如果等于0就是垂直
-// console.log(v0.dot(v1) / (v0.length * v1.length)); // 如果等于1平行；不等于1，相交
-
-// const v0 = new Vector2D(3, 5);
-// const v = v0.cross(new Vector2D(6, 9));
-// console.log(v);
-// drawBranch(ctx, v0, 50, 10, Math.PI / 2, 3);
 const v0 = new Vector2D(0, 0);
 const segment = 60;
+var x = 150;
+var y = 150;
 let rad = (Math.PI * 2) / segment;
 let i = 0;
-// var v1 = drawBranch(ctx, v0, 100, 4, i++ * rad);
-setInterval(() => {
+let timeCallBack = () => {
   ctx.clearRect(-256, -256, 512, 512);
-  if (i >= 60) {
-    i = 0;
+  //绘制圆盘
+  for (let i = 0; i < segment; i++) {
+    drawBranch(
+      ctx,
+      new Vector2D(x * Math.cos(i * rad), y * Math.sin(i * rad)),
+      10,
+      i % 5 == 0 ? 4 : 2,
+      i * rad,
+      i % 5 == 0 ? "#000" : "#86909c"
+    );
   }
-  var v1 = drawBranch(ctx, v0, 100, 4, i++ * rad);
-}, 100);
-// var v1 = drawBranch(ctx, v0, 100, 10, i*rad);
-// drawBranch(ctx, v1, 20, 8, -Math.PI / 6 + Math.PI);
-// drawBranch(ctx, v1, 20, 8, Math.PI / 6 + Math.PI);
+  var { h, m, s } = getCurrentTime();
+  // 时钟
+  // Math.PI/6/ 60 30deg;
+  drawBranch(
+    ctx,
+    new Vector2D(0, 0),
+    70,
+    6,
+    -(h * Math.PI) / 6 - (m * Math.PI) / 6 / 60 + Math.PI / 2,
+    "red"
+  );
+  // 分钟
+  // Math.PI/30/ 60 5deg;
+  drawBranch(
+    ctx,
+    new Vector2D(0, 0),
+    100,
+    4,
+    -(m * Math.PI) / 30 - (s * Math.PI) / 30 / 60 + Math.PI / 2,
+    "#000"
+  );
+  // 分钟
+  drawBranch(
+    ctx,
+    new Vector2D(0, 0),
+    140,
+    2,
+    -(s * Math.PI) / 30 + Math.PI / 2,
+    "#000"
+  );
+};
+
+setInterval(timeCallBack, 1000);
 
 function drawBranch(
   context: CanvasRenderingContext2D,
   v0: Vector2D,
   length: number,
   thickness: number,
-  dir: number
+  dir: number,
+  strokeStyle?: string
 ) {
   const v = new Vector2D(1, 0).rotate(dir).scale(length);
   const v1 = v0.copy().add(v);
   context.lineWidth = thickness;
-  // context.strokeStyle = "#000";
+  context.strokeStyle = strokeStyle || "#000";
   context.beginPath();
   context.moveTo(v0.x, v0.y);
   context.lineTo(v1.x, v1.y);
@@ -54,3 +83,23 @@ function drawBranch(
   context.closePath();
   return v1;
 }
+
+function getCurrentTime() {
+  var s = new Date();
+  var h = s.getHours();
+  return {
+    h: h > 12 ? h - 12 : h,
+    s: s.getSeconds(),
+    m: s.getMinutes(),
+  };
+}
+// var v1 = drawBranch(ctx, v0, 100, 4, i++ * rad);
+// setInterval(() => {
+//   ctx.clearRect(-256, -256, 512, 512);
+//   // if (i >= 60) {
+//   //   i = 0;
+//   // }
+//   drawBranch(ctx, v0, 100, 4, i++ * rad);
+// }, 1000);
+// var v1 = new Vector2D(10, 0);
+// drawBranch(ctx, v1, 20, 8, -Math.PI / 6 + Math.PI);
