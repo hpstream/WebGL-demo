@@ -6,11 +6,11 @@ import * as path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // build: {
-  //   rollupOptions: {
-  //     input: inputFn(),
-  //   },
-  // },
+  build: {
+    rollupOptions: {
+      input: inputFn(),
+    },
+  },
   plugins: [],
 });
 
