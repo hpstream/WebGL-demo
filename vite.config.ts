@@ -8,7 +8,7 @@ import * as path from "path";
 export default defineConfig({
   base: "./",
   build: {
-    outDir: "doc",
+    outDir: "docs",
     rollupOptions: {
       input: inputFn(),
     },
