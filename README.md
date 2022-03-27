@@ -1,6 +1,9 @@
 ## 项目启动
 > npm run dev
 ## 可视化学习知识点学习
-1. 坐标系转换 -> pages/coordinateSystem
+- [x] 坐标系转换
+- [x] 向量的使用
+- [ ] 绘制各种图形
+
 
 
