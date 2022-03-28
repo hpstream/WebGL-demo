@@ -22,7 +22,7 @@ function regularShape(edges = 3, x, y, step) {
   const dir = new Vector2D(step, 0);
   ret.push(p);
   for (let i = 0; i < edges; i++) {
-    p = p.copy().add(dir.rotate(delta)); // 顺时针旋转外脚
+    p = p.copy().add(dir.rotate(delta)); // 顺时针旋转外角
     ret.push(p);
   }
 
@@ -32,7 +32,7 @@ draw([new Vector2D(-256, 0), new Vector2D(256, 0)]);
 draw([new Vector2D(0, -256), new Vector2D(0, 256)]);
 draw(regularShape(3, 150, 50, 100));
 draw(regularShape(4, -50, 50, 100));
-draw(regularShape(11, -100, -150, 30));
+draw(regularShape(6, -100, -150, 50));
 draw(regularShape(25, 128, -158, 15));
 
 function draw(points: Vector2D[], strokeStyle = "black", fillStyle = null) {

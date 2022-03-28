@@ -37,18 +37,20 @@ draw([new Vector2D(0, -256), new Vector2D(0, 256)], ctx);
 //   close: true,
 // });
 
+// 心形线
+const loveStar = graphics(
+  (t, a) => a * (2 * Math.sin(t) - Math.sin(2 * t)),
+  (t, a) => a * (2 * Math.cos(t) - Math.cos(2 * t)),
+  10000
+);
+loveStar(-Math.PI, Math.PI, 40).draw(ctx, { strokeStyle: "red" });
+// 阿基米德螺旋线
 const helical = graphics(
   (t, l) => l * t * Math.cos(t),
   (t, l) => l * t * Math.sin(t),
   10000
 );
-helical(0, 50, 5).draw(ctx, { strokeStyle: "blue" });
-
-const star = graphics(
-  (t, l) => l * Math.cos(t) ** 3,
-  (t, l) => l * Math.sin(t) ** 3
-);
-star(0, Math.PI * 2, 150).draw(ctx, { strokeStyle: "red" });
+helical(0, 50, 5).draw(ctx, { strokeStyle: "gray" });
 
 function square(x0, y0, width, height): callBack {
   let v0 = new Vector2D(x0, y0);

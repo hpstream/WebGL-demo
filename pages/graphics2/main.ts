@@ -56,7 +56,7 @@ function arc(
   const SEGMENTS = 30; //切分为多少块；
   const deg = Math.PI * 2;
   const ang = Math.min(deg, endAng - startAng); // 判断是否画整圆
-  const ret = ang === deg ? [] : [[x0, y0]];
+  const ret = ang === deg ? [] : [[new Vector2D(x0, y0)]];
   const segments = Math.round((SEGMENTS * ang) / deg); //具体多少个切成多少片
   for (let i = 0; i <= segments; i++) {
     const p = i / segments;
@@ -72,7 +72,6 @@ function arc(
 // x = x0 + 2pt^2;
 // y = y0 + 2pt;
 // console.log(parabolic(0, 0, 100));
-
 function parabolic(
   x0: number,
   y0: number,
