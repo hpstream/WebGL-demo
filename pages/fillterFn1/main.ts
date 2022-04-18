@@ -41,7 +41,10 @@ function getImagesData(img, rate) {
   traverse(imageData11, ({ r, g, b, a }) => {
     // 对每个像素进行灰度化处理;
     // const v = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    return transformColor([r, g, b, a], grayscale(1));
+    return transformColor([r, g, b, a],
+      brightness(1.2),// 增强亮度
+      saturate(1.2) // 增强饱和度
+    )
 
   });
   context.putImageData(
