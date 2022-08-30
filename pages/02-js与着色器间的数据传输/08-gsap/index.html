@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+
+        /* height: 100%; */
+      }
+
+      #canvas {
+        background: url("./images/sky.jpg");
+        background-size: cover;
+        background-position: right bottom;
+      }
+
+      #audio {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        opacity: 10%;
+        transition: opacity 200ms;
+        z-index: 20;
+      }
+
+      #audio:hover {
+        opacity: 90%;
+      }
+    </style>
+  </head>
+  <canvas id="canvas"></canvas>
+  <audio id="audio" controls loop >
+    <source src="./audio/cef.mp3" type="audio/mpeg" />
+  </audio>
+  <body>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

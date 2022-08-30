@@ -15,7 +15,7 @@ export function initShaders(gl: WebGLRenderingContext, vShader: string, fShader:
   gl.useProgram(program);
   // 6.将程序对象挂到上下文对象上
   // gl.program = program;
-  return true;
+  return program;
 }
 
 export function loadShader(gl: WebGLRenderingContext, type: number, source: string) {

@@ -1,0 +1,40 @@
+import * as THREE from "three";
+
+// 导入着色器shader, '?rwa' vite支持的语法，认识是字符串
+import vertexShader from "./glsl/vertexShader.glsl?raw";
+import fragmentShader from "./glsl/fragmentShader.glsl?raw";
+
+import { initShaders } from "../../../src/lib/webgl/utils";
+
+// console.log(vertexShader, fragmentShader)
+
+// 1.获取canvas节点
+const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
+
+// 2.设置宽高
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// 3.获取三维画笔
+const gl = canvas.getContext('webgl') as WebGLRenderingContext;
+
+let program = initShaders(gl, vertexShader, fragmentShader);
+
+// 4.声明颜色RGBA
+gl.clearColor(0, 0, 0, 1);
+
+// 5.刷底色
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+
+let a_Position = gl.getAttribLocation(program, 'a_Position');
+// gl.vertexAttrib4fv
+gl.vertexAttrib2f(a_Position, 0.1, 0.1);
+
+// 绘制顶点
+gl.drawArrays(gl.POINTS, 0, 1);
+
+
+
+
+
