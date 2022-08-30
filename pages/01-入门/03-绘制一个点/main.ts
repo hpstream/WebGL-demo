@@ -1,14 +1,12 @@
 import * as THREE from "three";
 
-// 导入着色器shader
+// 导入着色器shader, '?rwa' vite支持的语法，认识是字符串
 import vertexShader from "./glsl/vertexShader.glsl?raw";
 import fragmentShader from "./glsl/fragmentShader.glsl?raw";
 
 import { initShaders } from "./../../../src/lib/webgl/utils";
 
-
 // console.log(vertexShader, fragmentShader)
-
 
 // 1.获取canvas节点
 const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
@@ -19,7 +17,6 @@ canvas.height = window.innerHeight;
 
 // 3.获取三维画笔
 const gl = canvas.getContext('webgl') as WebGLRenderingContext;
-
 
 initShaders(gl, vertexShader, fragmentShader);
 
