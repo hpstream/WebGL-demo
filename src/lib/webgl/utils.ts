@@ -6,6 +6,7 @@ export function initShaders(gl: WebGLRenderingContext, vShader: string, fShader:
   // 2.建立着色器对象
   const vextexShader = loadShader(gl, gl.VERTEX_SHADER, vShader);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fShader);
+  // console.log(vShader, fShader)
   // 3.把顶点着色对象装进程序对象中
   gl.attachShader(program, vextexShader);
   gl.attachShader(program, fragmentShader);
@@ -45,5 +46,13 @@ export function getMousePosInWebgl({ clientX, clientY }, canvas: HTMLCanvasEleme
   return {
     x: xBaseCenter / halfWidth,
     y: yBaseCenterTop / halfHeight
+  }
+}
+
+export function glToCssPos({ x, y }, { width, height }) {
+  const [halfWidth, halfHeight] = [width / 2, height / 2];
+  return {
+    x: x * halfWidth,
+    y: -y * halfHeight
   }
 }

@@ -40,6 +40,7 @@ export default class Poly {
     //如果是圆点，就获取一下uniform 变量
     if (circleDot) {
       this.u_IsPOINTS = gl.getUniformLocation(this.program, 'u_IsPOINTS')
+      console.log(circleDot)
     }
   }
 
@@ -81,11 +82,14 @@ export default class Poly {
         vertices.push(data[key])
       })
     })
-    this.vertices = vertices
+    this.vertices = vertices;
+    this.updateBuffer();
   }
   draw(types = this.types) {
     const { gl, count, circleDot, u_IsPOINTS } = this
+
     for (let type of types) {
+
       circleDot && gl.uniform1f(u_IsPOINTS, type === 'POINTS')
       gl.drawArrays(gl[type], 0, count);
     }
