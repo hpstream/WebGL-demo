@@ -36,6 +36,7 @@ let poly = new Poly({
   types: ['POINTS', 'LINE_STRIP'],
   circleDot: true
 })
+
 // 取消右键菜单提示
 canvas.oncontextmenu = function () {
   return false;
