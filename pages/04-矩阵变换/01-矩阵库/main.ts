@@ -58,7 +58,7 @@ const cm = new Matrix4().set(
   0, 0, 0, 1
 )
 const dm = cm.multiply(bm);
-console.log(dm.elements);
+console.log(dm);
 
 gl.uniformMatrix4fv(u_Matrix, false, dm.elements);
 
