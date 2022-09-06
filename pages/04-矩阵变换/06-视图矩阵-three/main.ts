@@ -69,10 +69,12 @@ gl.enableVertexAttribArray(a_Position);
 
 const u_ViewMatrix = gl.getUniformLocation(program, 'u_ViewMatrix');
 
-let viewMatrix = new Matrix4().lookAt(new Vector3(0, 0, 2),
+let viewMatrix = lookAt(new Vector3(0, 0, 2),
   new Vector3(0, 0, 0),
-  new Vector3(0, 1, 0))
+  new Vector3(0, 1, 0)
+);
 let deg = 0.01;
+
 
 function render() {
   // deg += 0.001;
@@ -87,11 +89,13 @@ function render() {
   //   0, Math.cos(deg), -Math.sin(deg), 0,
   //   0, Math.sin(deg), Math.cos(deg), 0,
   //   0, 0, 0, 1));
+
   let el = viewMatrix.multiply(new Matrix4().set(
     Math.cos(deg), 0, Math.sin(deg), 0,
     0, 1, 0, 0,
     -Math.sin(deg), 0, Math.cos(deg), 0,
     0, 0, 0, 1).transpose());
+
 
   gl.uniformMatrix4fv(u_ViewMatrix, false, el.elements)
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -101,24 +105,24 @@ function render() {
 }
 render();
 
-// function lookAt(e: THREE.Vector3, t: THREE.Vector3, u: THREE.Vector3) {
-//   //目标点到视点的向量
-//   const d = new Vector3().subVectors(e, t)
-//   d.normalize()
-//   //d和上方向的垂线
-//   const a = new Vector3().crossVectors(u, d)
-//   a.normalize()
-//   //d和a的垂线
-//   const b = new Vector3().crossVectors(d, a)
-//   b.normalize()
-//   //c 基于d取反
-//   // const c = new Vector3(d.x, d.y, d.z)
-//   const c = d
-//   return new Matrix4().set(
-//     a.x, a.y, a.z, 0,
-//     b.x, b.y, b.z, 0,
-//     c.x, c.y, c.z, 0,
-//     0, 0, 0, 1
-//   )
-// }
+function lookAt(e: THREE.Vector3, t: THREE.Vector3, u: THREE.Vector3) {
+  //目标点到视点的向量
+  const d = new Vector3().subVectors(e, t)
+  d.normalize()
+  //d和上方向的垂线
+  const a = new Vector3().crossVectors(u, d)
+  a.normalize()
+  //d和a的垂线
+  const b = new Vector3().crossVectors(d, a)
+  b.normalize()
+  //c 基于d取反
+  // const c = new Vector3(d.x, d.y, d.z)
+  const c = d
+  return new Matrix4().set(
+    a.x, a.y, a.z, 0,
+    b.x, b.y, b.z, 0,
+    c.x, c.y, c.z, 0,
+    0, 0, 0, 1
+  )
+}
 
