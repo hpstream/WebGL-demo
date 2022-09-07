@@ -59,6 +59,7 @@ gl.drawArrays(gl.POINTS, 0, vertices.length / 3);
 
 
 
+
 function createVertices() {
   const vertices: number[] = [];
   for (let z = minPosZ; z < maxPosZ; z += 0.1) {

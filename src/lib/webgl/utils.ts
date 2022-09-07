@@ -56,3 +56,16 @@ export function glToCssPos({ x, y }, { width, height }) {
     y: -y * halfHeight
   }
 }
+
+//线性比例尺 y= ax+b;
+function ScaleLinear(ax: number, ay: number, bx: number, by: number) {
+  const delta = {
+    x: bx - ax,
+    y: by - ay,
+  };
+  const k = delta.y / delta.x;
+  const b = ay - ax * k;
+  return function (x) {
+    return k * x + b;
+  };
+}
