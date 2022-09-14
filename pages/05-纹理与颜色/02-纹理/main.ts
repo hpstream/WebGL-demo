@@ -22,12 +22,13 @@ let program = initShaders(gl, vsSource, fsSource);
 //声明颜色 rgba
 gl.clearColor(0, 0, 0, 1);
 
-//数据源
+const maxV = 1;
+const maxU = 1;
 const source = new Float32Array([
-  -0.5, 0.5, 0, 1,
+  -0.5, 0.5, 0, maxV,
   -0.5, -0.5, 0, 0.0,
-  0.5, 0.5, 1.0, 1,
-  0.5, -0.5, 1.0, 0.0,
+  0.5, 0.5, maxU, maxV,
+  0.5, -0.5, maxU, 0.0,
 ]);
 // 元素的字节数
 const elementBytes = source.BYTES_PER_ELEMENT;
@@ -98,6 +99,7 @@ image.onload = () => {
     gl.TEXTURE_MIN_FILTER,
     gl.LINEAR
   )
+
 
   const u_Sampler = gl.getUniformLocation(program, 'u_Sampler')
   gl.uniform1i(u_Sampler, 0);
