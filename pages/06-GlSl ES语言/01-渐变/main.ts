@@ -20,50 +20,31 @@ const gl = canvas.getContext('webgl') as WebGLRenderingContext;
 let program = initShaders(gl, vsSource, fsSource);
 
 
-//声明颜色 rgba
-gl.clearColor(0, 0, 0, 1);
-//正交投影矩阵
-const projectionMatrix = new Matrix4()
-//定义相机世界高度尺寸的一半
-const halfH = 2
-//计算画布的宽高比
-const ratio = canvas.width / canvas.height
-//基于halfH和画布宽高比计算相机世界宽度尺寸的一半
-const halfW = halfH * ratio
-//定义相机世界的6个边界
-const [left, right, top, bottom, near, far] = [
-  -halfW, halfW, halfH, -halfH, 0, 4
-]
-//获取正交投影矩阵
-projectionMatrix.makeOrthographic(left, right, top, bottom, near, far)
 
-console.log(projectionMatrix)
 const poly = new Poly({
   gl,
   program,
   source: new Float32Array([
-    0, 0.3, -0.2,
-    - 0.3, -0.3, -0.2,
-    0.3, -0.3, -0.2
+    -1, 1,
+    -1, -1,
+    1, 1,
+    1, -1
   ]),
-  PaintType: 'TRIANGLES',
+  paintType: 'TRIANGLE_STRIP',
   attributes: {
     a_Position: {
-      size: 3,
+      size: 2,
       index: 0
-    },
+    }
   },
   uniforms: {
-    u_Color: {
-      type: 'uniform4fv',
-      value: [1.0, 1.0, 0.0, 1.0]
-    },
-    u_ProjectionMatrix: {
-      type: 'uniformMatrix4fv',
-      value: projectionMatrix.elements
-    },
-  },
+    u_CanvasSize: {
+      type: 'uniform2fv',
+      value: [canvas.width, canvas.height]
+    }
+  }
 });
+
 
 poly.draw();
 

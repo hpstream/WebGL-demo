@@ -1,16 +1,16 @@
 
-type PaintType = 'POINTS' | 'TRIANGLES';
+type PaintType = 'POINTS' | 'TRIANGLES' | 'TRIANGLE_STRIP';
 type sourceType = Float32Array;
 type attr = { size: number, index: number, byteIndex?: number };
 type uniform = { type: string, value: number[], transpose?: boolean };
 interface PloyParams {
   gl: WebGLRenderingContext;
   program: WebGLProgram;
-  PaintType?: PaintType;
+  paintType?: PaintType;
   source: sourceType;
   attributes?: Record<string, attr>,
   uniforms?: Record<string, uniform>,
-  maps?: {}
+  maps?: {},
 }
 
 const defAttr = () => ({
@@ -24,7 +24,7 @@ const defAttr = () => ({
 export class Poly<T extends PloyParams, a extends keyof T['attributes'], u extends keyof T['uniforms']>  {
   gl: WebGLRenderingContext;
   program: WebGLProgram;
-  PaintType: PaintType;
+  paintType: PaintType;
   source: sourceType;
   attributes: Record<a, attr>;
   uniforms: Record<u, uniform>;
@@ -92,9 +92,9 @@ export class Poly<T extends PloyParams, a extends keyof T['attributes'], u exten
     }
   }
 
-  draw(PaintType = this.PaintType) {
+  draw(paintType = this.paintType) {
     const { gl, sourceSize } = this;
-    gl.drawArrays(gl[PaintType], 0, sourceSize);
+    gl.drawArrays(gl[paintType], 0, sourceSize);
   }
 
 }
