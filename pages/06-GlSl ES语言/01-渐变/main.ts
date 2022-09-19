@@ -37,6 +37,7 @@ const [left, right, top, bottom, near, far] = [
 //获取正交投影矩阵
 projectionMatrix.makeOrthographic(left, right, top, bottom, near, far)
 
+console.log(projectionMatrix)
 const poly = new Poly({
   gl,
   program,
