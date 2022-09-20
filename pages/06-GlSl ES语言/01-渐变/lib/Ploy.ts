@@ -20,7 +20,6 @@ const defAttr = () => ({
   uniforms: {},
   maps: {}
 })
-
 export class Poly<T extends PloyParams, a extends keyof T['attributes'], u extends keyof T['uniforms']>  {
   gl: WebGLRenderingContext;
   program: WebGLProgram;
