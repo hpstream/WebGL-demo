@@ -41,26 +41,29 @@ const up = new Vector3(0, 1, 0)
 const camera = new OrthographicCamera(
   left, right, top, bottom, near, far
 )
-camera.position.copy(eye)
-camera.lookAt(target)
 camera.updateWorldMatrix(true, true)
 
+//位移矩阵
+const positionMatrix = new Matrix4().setPosition(eye)
 
+//旋转矩阵
+const rotationMatrix = new Matrix4().lookAt(eye, target, up)
+
+//视图矩阵
+const viewMatrix = new Matrix4().multiplyMatrices(
+  positionMatrix,
+  rotationMatrix
+).invert()
+
+//投影矩阵
+const projectionMatrix = camera.projectionMatrix
 
 //投影视图矩阵
-const pvMatrix = new Matrix4()
-  .multiplyMatrices(
-    camera.projectionMatrix,
-    camera.matrixWorldInverse
-  )
+const pvMatrix = new Matrix4().multiplyMatrices(
+  projectionMatrix,
+  viewMatrix
+)
 
-console.log(camera.matrixWorld.elements);
-console.log(camera.matrixWorldInverse.elements);
-// console.log(new Matrix4()
-//   .multiplyMatrices(
-//     camera.matrixWorld.clone(),
-//     camera.matrixWorldInverse.clone()
-//   ))
 
 const triangle1 = crtTriangle(
   [1, 0, 0, 1],

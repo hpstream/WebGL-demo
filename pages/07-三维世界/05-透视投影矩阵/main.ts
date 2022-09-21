@@ -6,7 +6,7 @@ import fsSource from "./glsl/fragmentShader.glsl?raw";
 
 import { initShaders } from "../../../src/lib/webgl/utils";
 import { Poly } from "./lib/Ploy";
-import { Matrix4, OrthographicCamera, Vector3 } from "three";
+import { Matrix4, OrthographicCamera, PerspectiveCamera, Vector3 } from "three";
 
 const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
 
@@ -18,34 +18,22 @@ canvas.height = window.innerHeight;
 const gl = canvas.getContext('webgl') as WebGLRenderingContext;
 
 let program = initShaders(gl, vsSource, fsSource);
-
-
-//声明颜色 rgba
 gl.clearColor(0, 0, 0, 1);
-//定义相机世界高度尺寸的一半
-const halfH = 2
-//计算画布的宽高比
-const ratio = canvas.width / canvas.height
-//基于halfH和画布宽高比计算相机世界宽度尺寸的一半
-const halfW = halfH * ratio
-//定义相机世界的6个边界
-const [left, right, top, bottom, near, far] = [
-  -halfW, halfW, halfH, -halfH, 0, 4
+
+const [fov, aspect, near, far] = [
+  45,
+  canvas.width / canvas.height,
+  1,
+  20
 ]
+const camera = new PerspectiveCamera(fov, aspect, near, far)
 
-const eye = new Vector3(1, 0, 3)
-const target = new Vector3(0.5, 0.5, 0)
+const eye = new Vector3(1, 0.5, 1)
+const target = new Vector3(0, 0, -2.5)
 const up = new Vector3(0, 1, 0)
-
-//正交相机
-const camera = new OrthographicCamera(
-  left, right, top, bottom, near, far
-)
 camera.position.copy(eye)
 camera.lookAt(target)
 camera.updateWorldMatrix(true, true)
-
-
 
 //投影视图矩阵
 const pvMatrix = new Matrix4()
@@ -54,30 +42,25 @@ const pvMatrix = new Matrix4()
     camera.matrixWorldInverse
   )
 
-console.log(camera.matrixWorld.elements);
-console.log(camera.matrixWorldInverse.elements);
-// console.log(new Matrix4()
-//   .multiplyMatrices(
-//     camera.matrixWorld.clone(),
-//     camera.matrixWorldInverse.clone()
-//   ))
 
+console.log(pvMatrix.elements)
 const triangle1 = crtTriangle(
   [1, 0, 0, 1],
-  [
-    0, 0.3, -0.2,
-    - 0.3, -0.3, -0.2,
-    0.3, -0.3, -0.2
-  ]
+  [-0.5, 0, -3]
 )
-const triangle2 = crtTriangle(
+// const triangle2 = crtTriangle(
+//   [1, 1, 0, 1],
+//   [0.5, 0, -3]
+// )
+const triangle3 = crtTriangle(
   [1, 1, 0, 1],
-  [
-    0, 0.3, 0.2,
-    - 0.3, -0.3, 0.2,
-    0.3, -0.3, 0.2
-  ]
+  [-0.5, 0, -2]
 )
+
+// const triangle4 = crtTriangle(
+//   [1, 1, 0, 1],
+//   [0.5, 0, -2]
+// )
 
 render()
 
@@ -85,17 +68,25 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
   triangle1.init()
   triangle1.draw()
-  triangle2.init()
-  triangle2.draw()
+  // triangle2.init()
+  // triangle2.draw()
+  triangle3.init()
+  triangle3.draw()
+  // triangle4.init()
+  // triangle4.draw()
 }
 
 
-function crtTriangle(color: number[], source: number[]) {
+function crtTriangle(color, [x, y, z]) {
   return new Poly({
     gl,
     program,
-    source: new Float32Array(source),
-    PaintType: 'TRIANGLES',
+    source: new Float32Array([
+      x, 0.3 + y, z,
+      - 0.3 + x, -0.3 + y, z,
+      0.3 + x, -0.3 + y, z
+    ]),
+    paintType: 'TRIANGLES',
     attributes: {
       a_Position: {
         size: 3,
@@ -111,9 +102,8 @@ function crtTriangle(color: number[], source: number[]) {
         type: 'uniformMatrix4fv',
         value: pvMatrix.elements
       },
-    },
-  });
-
+    }
+  })
 }
 
 
