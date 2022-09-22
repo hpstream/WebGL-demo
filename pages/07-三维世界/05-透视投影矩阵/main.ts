@@ -27,7 +27,6 @@ const [fov, aspect, near, far] = [
   20
 ]
 const camera = new PerspectiveCamera(fov, aspect, near, far)
-
 const eye = new Vector3(1, 0.5, 1)
 const target = new Vector3(0, 0, -2.5)
 const up = new Vector3(0, 1, 0)
