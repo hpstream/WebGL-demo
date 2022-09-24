@@ -135,6 +135,8 @@ canvas.addEventListener('wheel', ({ deltaY }) => {
 // 旋转方法
 function rotate({ x, y }) {
   const { clientHeight } = canvas
+  // spherical.theta -= pi2 * x / clientHeight
+  // spherical.phi = Math.PI;
   spherical.theta -= pi2 * x / clientHeight
   spherical.phi -= pi2 * y / clientHeight
   update()
