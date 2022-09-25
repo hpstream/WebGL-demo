@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    // 15个种类，6到7组
+    let type = 15;
+    let count = 3*6;
+    let rate = 1000;
+    const postion = 29;
+    const minpostion = 13;
+    let removeCount = 3;
+    let allCount = 1000*1000;
+
+    function getRate(type, count, rate, postion, removeCount) {
+      let cardMap = {};
+      for (let i = 1; i <= type; i++) {
+        for (let j = 0; j < count; j++) {
+          let p = -1;
+          while (!cardMap[p]) {
+            p = Math.floor(Math.random() * type * count * rate);
+            cardMap[p] = i;
+          }
+        }
+      }
+      let cards = Object.values(cardMap);
+      let k = (minpostion - postion) / (type * count);
+      let b = k * 0 + postion;
+
+      return plan();
+      function plan() {
+        let myCards = [];
+        let offsetIndex = postion;
+        let p = postion;
+        for (let i = 0; i < p; i++) {
+          myCards[i] = cards[i];
+        }
+        while (offsetIndex < cards.length) {
+          let tem = {};
+          // 如果卡牌等于三张，就删除三张；
+          for (let i = 0; i < myCards.length; i++) {
+            if (!tem[myCards[i]]) {
+              tem[myCards[i]] = 0;
+            }
+            tem[myCards[i]]++;
+            if (tem[myCards[i]] === removeCount) {
+              for (let j = 0; j <= i; j++) {
+                if (myCards[j] === myCards[i]) {
+                  myCards[j] = undefined;
+                }
+              }
+            }
+          }
+
+          // 收拢数组    
+          let temCards = [];
+          for (let i = 0; i < myCards.length; i++) {
+            if (myCards[i] === undefined) {
+            }else{
+              temCards.push(myCards[i])
+            
+            }
+          }
+          if (temCards.length === myCards.length) {
+            return false;
+          } else {
+            let newPosion = Math.floor(k * offsetIndex + b);
+            while(temCards.length < newPosion){
+              if(offsetIndex >= cards.length){
+                return true;
+              }
+              temCards.push(cards[offsetIndex++]);
+            }
+            // console.log(newPosion,offsetIndex)
+            myCards = temCards;
+           
+          }
+        }
+        return true;
+      }
+    }
+
+    // 计算概率
+    let failCount = 0;
+    let starTime = new Date().getTime();
+    for (let i = 0; i < allCount; i++) {
+      if (!getRate(type, count, rate, postion, removeCount)) {
+        failCount++;
+      }
+    }
+   
+    console.log(
+      `时间：${((new Date().getTime()-starTime)/1000)}s,总次数：${allCount / 10000}万，失败率：${
+        (failCount / allCount) * 100
+      }%,成功率：${(1 - failCount / allCount) * 100}%`
+    );
+  </script>
+</html>
