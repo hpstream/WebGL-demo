@@ -1,0 +1,1 @@
+*{padding:0;margin:0}html,body,#app{width:100%}#canvas{background:url(https://hpstream.github.io/WebGL-demo/assets/sky.0980c03b.jpg);background-size:cover;background-position:right bottom}#audio{position:absolute;right:20px;bottom:20px;opacity:10%;transition:opacity .2s;z-index:20}#audio:hover{opacity:90%}
