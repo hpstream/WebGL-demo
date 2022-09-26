@@ -22,6 +22,7 @@
   "homepage": "https://github.com/hpstream/WebGL-demo#readme",
   "dependencies": {
     "@types/offscreencanvas": "^2019.6.4",
+    "@vitejs/plugin-vue": "^2.3.0",
     "earcut": "^2.2.3",
     "gsap": "^3.11.0",
     "roughjs": "^4.5.2",

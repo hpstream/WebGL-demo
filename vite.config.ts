@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import * as fs from "fs";
 import * as path from "path";
-
+import vue from '@vitejs/plugin-vue';
 // console.log(fs);
 
 // https://vitejs.dev/config/
@@ -13,7 +13,7 @@ export default defineConfig({
       input: inputFn(),
     },
   },
-  plugins: [],
+  plugins: [vue()],
 });
 
 function inputFn(): Record<string, string> {
