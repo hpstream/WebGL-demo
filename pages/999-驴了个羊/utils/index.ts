@@ -35,8 +35,8 @@ let imgs = [
   img15,
 ]
 
-function range(start: number, end: number) {
-  return start + Math.floor(Math.random() * (end - start))
+export function range(start: number, end: number) {
+  return Math.floor(start) + Math.floor(Math.random() * (end - start))
 }
 
 // 判断两个举性是否重叠
