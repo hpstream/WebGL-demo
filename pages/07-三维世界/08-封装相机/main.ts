@@ -7,6 +7,7 @@ import fsSource from "./glsl/fragmentShader.glsl?raw";
 import { initShaders } from "../../../src/lib/webgl/utils";
 import { Poly } from "./lib/Ploy";
 import { Matrix4, OrthographicCamera, PerspectiveCamera, Vector2, Vector3, Spherical } from "three";
+import { OrbitControls } from "./lib/OrbitControls";
 
 const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
 
@@ -36,19 +37,8 @@ camera.lookAt(target)
 camera.updateMatrixWorld()
 
 //投影视图矩阵
-const pvMatrix = new Matrix4()
-  .multiplyMatrices(
-    camera.projectionMatrix,
-    camera.matrixWorldInverse
-  )
-console.log(pvMatrix.elements)
+const pvMatrix = new Matrix4();
 
-/* 旋转轨道 */
-const pi2 = Math.PI * 2
-const spherical = new Spherical()
-  .setFromVector3(
-    camera.position.clone().sub(target)
-  )
 const triangle1 = crtTriangle(
   [1, 0, 0, 1],
   [
@@ -73,163 +63,41 @@ const triangle4 = crtTriangle(
   new Matrix4().setPosition(0.5, 0, -2).elements
 )
 
-// 平移轨道
-const mouseButtons = new Map([[2, 'pan'], [0, 'rotate']])
-let state = 'none';
-const [dragStart, dragEnd] = [
-  new Vector2(),
-  new Vector2(),
-]
-const panOffset = new Vector3()
-const screenSpacePanning = true;
+
 canvas.addEventListener('contextmenu', (e) => {
   e.preventDefault();
-})
+}) /* 实例化轨道控制器 */
+const orbit = new OrbitControls({
+  camera, target,
+  dom: canvas,
+});
 
-canvas.addEventListener('pointerdown', ({ clientX, clientY, button }) => {
-  // button:0 一个指头按, button:2 二个指头按
-  console.log(clientX, clientY, button);
-  dragStart.set(clientX, clientY);
-  state = mouseButtons.get(button)
+canvas.addEventListener('pointerdown', (e) => {
+  orbit.pointerdown(e)
 
 })
 
 canvas.addEventListener('pointermove', (event) => {
-  dragEnd.set(event.clientX, event.clientY)
-  switch (state) {
-    case 'pan':
-      handleMouseMovePan(event)
-      break;
-    case 'rotate':
-      console.log(dragEnd.clone().sub(dragStart))
-      rotate(dragEnd.clone().sub(dragStart))
-      break
-
-    default:
-      break;
-  }
-  dragStart.copy(dragEnd)
+  orbit.pointermove(event)
+  pvMatrix.copy(orbit.getPvMatrix())
+  render()
 })
 canvas.addEventListener('pointerup', () => {
-  state = 'none'
+  orbit.pointerup()
 })
 canvas.addEventListener('pointerleave', () => {
-  state = 'none'
+  orbit.pointerup()
 })
-/* 缩放轨道 */
-//滚轮在每次滚动时的缩放系数
-const zoomScale = 0.95
+
 //滚轮事件
-canvas.addEventListener('wheel', ({ deltaY }) => {
-  // console.log(deltaY)
-  console.log('deltaY', deltaY);
-  if (deltaY < 0) {
-    dolly(1 / zoomScale)
-  } else {
-    dolly(zoomScale)
-  }
-  update()
-})
-const rotateDir = 'xy'
-// 旋转方法
-function rotate({ x, y }) {
-  const { clientHeight } = canvas
-  const deltaT = pi2 * x / clientHeight
-  const deltaP = pi2 * y / clientHeight
-  if (rotateDir.includes('x')) {
-    spherical.theta -= deltaT
-  }
-  if (rotateDir.includes('y')) {
-    const phi = spherical.phi - deltaP
-    spherical.phi = Math.min(
-      Math.PI * 0.99999999,
-      Math.max(0.00000001, phi)
-    )
-  }
-  update()
-}
-function dolly(dollyScale: number) {
-  // camera.position.lerp(target, 1 - dollyScale);
-  spherical.radius *= dollyScale
-}
-function handleMouseMovePan({ clientX, clientY }: PointerEvent) {
-  dragEnd.set(clientX, clientY);
-  pan(dragEnd.clone().sub(dragStart))
-  dragStart.copy(dragEnd)
-}
-
-
-function pan({ x, y }: THREE.Vector2) {
-  const { matrix, position, up } = camera
-  const { clientWidth, clientHeight } = canvas
-  //视线长度：相机视点到目标点的距离
-  const sightLen = position.clone().sub(target).length()
-  //视椎体垂直夹角的一半(弧度)
-  //(fov/2)*Math.PI/180
-  const halfFov = fov * Math.PI / 360
-  //目标平面的高度
-  const targetHeight = sightLen * Math.tan(halfFov) * 2
-
-  //目标平面与画布的高度比
-  const ratio = targetHeight / clientHeight
-
-  //画布位移量转目标平面位移量
-  const distanceLeft = x * ratio
-  const distanceUp = y * ratio
-
-
-
-  //相机平移方向
-  //鼠标水平运动时，按照相机本地坐标的x轴平移相机
-  const mx = new Vector3().setFromMatrixColumn(matrix, 0)
-  //鼠标水平运动时，按照相机本地坐标的y轴，或者-z轴平移相机
-  const myOrz = new Vector3()
-  if (screenSpacePanning) {
-    //y轴，正交相机中默认
-    myOrz.setFromMatrixColumn(matrix, 1)
-  } else {
-    //-z轴，透视相机中默认
-    myOrz.crossVectors(up, mx)
-  }
-
-  //目标平面位移量转世界坐标
-  const vx = mx.clone().multiplyScalar(-distanceLeft)
-  const vy = myOrz.clone().multiplyScalar(distanceUp)
-  panOffset.copy(vx.add(vy))
-
-  update();
-
-}
-function update() {
-  //基于平移量平移相机
-  target.add(panOffset)
-  camera.position.add(panOffset)
-
-
-  //基于旋转量旋转相机
-  const rotateOffset = new Vector3()
-    .setFromSpherical(spherical)
-  camera.position.copy(
-    target.clone().add(rotateOffset)
-  )
-  camera.lookAt(target)
-  camera.updateMatrixWorld(true)
-  pvMatrix.multiplyMatrices(
-    camera.projectionMatrix,
-    camera.matrixWorldInverse,
-  )
-  //重置旋转量和平移量
-  spherical.setFromVector3(
-    camera.position.clone().sub(target)
-  )
-  panOffset.set(0, 0, 0)
+canvas.addEventListener('wheel', (e) => {
+  orbit.wheel(e)
+  pvMatrix.copy(orbit.getPvMatrix())
   render()
-}
+})
 
-
-
+pvMatrix.copy(orbit.getPvMatrix())
 render()
-
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
   triangle1.init()
