@@ -20,19 +20,17 @@ const gl = canvas.getContext('webgl') as WebGLRenderingContext;
 let program = initShaders(gl, vsSource, fsSource);
 gl.clearColor(0, 0, 0, 1);
 
-const halfH = 2
-const ratio = canvas.width / canvas.height
-const halfW = halfH * ratio
-const [left, right, top, bottom, near, far] = [
-  -halfW, halfW, halfH, -halfH, 1, 8
-]
 const eye = new Vector3(1, 1, 2)
 const target = new Vector3(0, 0, -3)
 const up = new Vector3(0, 1, 0)
 
-const camera = new OrthographicCamera(
-  left, right, top, bottom, near, far
-)
+const [fov, aspect, near, far] = [
+  45,
+  canvas.width / canvas.height,
+  1,
+  20
+]
+const camera = new PerspectiveCamera(fov, aspect, near, far)
 camera.position.copy(eye)
 camera.lookAt(target)
 camera.updateMatrixWorld()
@@ -151,8 +149,8 @@ function rotate({ x, y }) {
   update()
 }
 function dolly(dollyScale: number) {
-  camera.zoom *= dollyScale
-  camera.updateProjectionMatrix()
+  // camera.position.lerp(target, 1 - dollyScale);
+  spherical.radius *= dollyScale
 }
 function handleMouseMovePan({ clientX, clientY }: PointerEvent) {
   dragEnd.set(clientX, clientY);
@@ -161,27 +159,44 @@ function handleMouseMovePan({ clientX, clientY }: PointerEvent) {
 }
 
 
-function pan(delta: THREE.Vector2) {
-  const cameraW = camera.right - camera.left;
-  const cameraH = camera.top - camera.bottom;
-  const ratioX = delta.x / canvas.clientWidth;
-  const ratioY = delta.y / canvas.clientHeight;
-  const distanceLeft = ratioX * cameraW;
-  const distanceUp = ratioY * cameraH;
+function pan({ x, y }: THREE.Vector2) {
+  const { matrix, position, up } = camera
+  const { clientWidth, clientHeight } = canvas
+  //视线长度：相机视点到目标点的距离
+  const sightLen = position.clone().sub(target).length()
+  //视椎体垂直夹角的一半(弧度)
+  //(fov/2)*Math.PI/180
+  const halfFov = fov * Math.PI / 360
+  //目标平面的高度
+  const targetHeight = sightLen * Math.tan(halfFov) * 2
 
-  const mx = new Vector3().setFromMatrixColumn(camera.matrix, 0)
-  const vx = mx.clone().multiplyScalar(-distanceLeft);
+  //目标平面与画布的高度比
+  const ratio = targetHeight / clientHeight
 
-  const vy = new Vector3();
+  //画布位移量转目标平面位移量
+  const distanceLeft = x * ratio
+  const distanceUp = y * ratio
+
+
+
+  //相机平移方向
+  //鼠标水平运动时，按照相机本地坐标的x轴平移相机
+  const mx = new Vector3().setFromMatrixColumn(matrix, 0)
+  //鼠标水平运动时，按照相机本地坐标的y轴，或者-z轴平移相机
+  const myOrz = new Vector3()
   if (screenSpacePanning) {
-    vy.setFromMatrixColumn(camera.matrix, 1);
+    //y轴，正交相机中默认
+    myOrz.setFromMatrixColumn(matrix, 1)
   } else {
-    vy.crossVectors(camera.up, mx);
+    //-z轴，透视相机中默认
+    myOrz.crossVectors(up, mx)
   }
 
-  vy.multiplyScalar(distanceUp);
+  //目标平面位移量转世界坐标
+  const vx = mx.clone().multiplyScalar(-distanceLeft)
+  const vy = myOrz.clone().multiplyScalar(distanceUp)
   panOffset.copy(vx.add(vy))
-  // camera.position.add(new Vector3(distanceLeft, distanceUp, 0))
+
   update();
 
 }
@@ -190,13 +205,13 @@ function update() {
   target.add(panOffset)
   camera.position.add(panOffset)
 
+
   //基于旋转量旋转相机
   const rotateOffset = new Vector3()
     .setFromSpherical(spherical)
   camera.position.copy(
     target.clone().add(rotateOffset)
   )
-
   camera.lookAt(target)
   camera.updateMatrixWorld(true)
   pvMatrix.multiplyMatrices(
