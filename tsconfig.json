@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom", ]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","pages/**/*.ts","pages/**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","pages/**/*.ts","pages/**/*.d.ts", "sfc.d.ts"],
   "references": [{
     "path": "./tsconfig.node.json"
   }]
