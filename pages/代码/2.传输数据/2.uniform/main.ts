@@ -19,6 +19,18 @@ const gl = canvas.getContext('webgl') as WebGLRenderingContext;
 const program = initShaders(gl, vertexShader, fragmentShader);
 
 
+// 传递数据
+const a_Position = gl.getAttribLocation(program, 'a_Position');
+const a_PointSize = gl.getAttribLocation(program, 'a_PointSize');
+const u_FragColor = gl.getUniformLocation(program, 'u_FragColor');
+
+// gl.vertexAttrib1f(a_Position, 1);
+gl.vertexAttrib2f(a_Position, 1.0, 1.0);
+// gl.vertexAttrib3f(a_Position, 1.0, 1.0, 1.0);
+// gl.vertexAttrib4f(a_Position, 1.0, 1.0, 1.0, 1.0);
+
+gl.vertexAttrib1f(a_PointSize, 50);
+gl.uniform4fv(u_FragColor, new Float32Array([1, 1, 1, 1]))
 
 
 // 4.声明颜色RGBA
