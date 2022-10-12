@@ -4,7 +4,7 @@ import * as THREE from "three";
 import vertexShader from "./glsl/vertexShader.glsl?raw";
 import fragmentShader from "./glsl/fragmentShader.glsl?raw";
 
-import { initShaders } from "../../../src/lib/webgl/utils";
+import { initShaders } from "../../../../src/lib/webgl/utils";
 import { Matrix4, Vector3, Vector4 } from "three";
 
 
