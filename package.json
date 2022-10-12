@@ -23,6 +23,7 @@
   "dependencies": {
     "@types/offscreencanvas": "^2019.6.4",
     "@vitejs/plugin-vue": "^2.3.0",
+    "dat.gui": "^0.7.9",
     "earcut": "^2.2.3",
     "gsap": "^3.11.0",
     "roughjs": "^4.5.2",
@@ -33,6 +34,7 @@
     "vue-tsc": "^0.33.9"
   },
   "devDependencies": {
+    "@types/dat.gui": "^0.7.7",
     "@types/node": "^17.0.21",
     "@types/three": "^0.143.1"
   }
