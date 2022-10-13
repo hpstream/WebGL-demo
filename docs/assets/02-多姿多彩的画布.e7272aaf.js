@@ -1,1 +1,0 @@
-import"./modulepreload-polyfill.b7f2da20.js";import{C as t}from"./vendor.36f02d62.js";const r=document.querySelector("#canvas");r.width=window.innerWidth;r.height=window.innerHeight;const o=r.getContext("webgl");let e=new t("rgba(255,255,0,1)");o.clearColor(e.r,e.g,e.b,1);o.clear(o.COLOR_BUFFER_BIT);
