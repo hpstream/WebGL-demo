@@ -8,6 +8,7 @@ import * as dat from "dat.gui";
 
 import { initShaders } from "./lib/utils";
 import { Matrix3, Matrix4 } from "three";
+import { Two } from "./lib/Two";
 
 // 1.获取canvas节点
 const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
@@ -29,42 +30,29 @@ let vertices = new Float32Array([
   -0.2, -0.2, 0, 0, 1, 0, 1,// v1
   0.2, -0.2, 0, 0, 0, 1, 1//v2
 ])
-let verticeSize = 3;
-let colorSize = 4;
-let elementBytes = vertices.BYTES_PER_ELEMENT;
-console.log(elementBytes, vertices);
-let sourceSize = verticeSize + colorSize;
-const categoryBytes = sourceSize * elementBytes;
 
-// 缓冲对象
-const vertexBuffer = gl.createBuffer();
-// 绑定缓冲对象
-gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-// 写入数据
-gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+let two = new Two({
+  gl,
+  program,
+  source: vertices,
+  type: 'TRIANGLES',
+  attribute: {
+    'a_Position': {
+      size: 3,
+      index: 0
+    },
+    'a_Color': {
+      size: 4,
+      index: 3
+    }
+  },
+  uniforms: {}
+})
 
-let a_Position = gl.getAttribLocation(program, 'a_Position');
-let a_Color = gl.getAttribLocation(program, 'a_Color');
+gl.clearColor(0, 0, 0, 1)
+// 5.刷底色
+gl.clear(gl.COLOR_BUFFER_BIT);
 
-
-// 修改attribute变量
-gl.vertexAttribPointer(a_Position, verticeSize, gl.FLOAT, false, categoryBytes, 0);
-gl.vertexAttribPointer(a_Color, colorSize, gl.FLOAT, false, categoryBytes, verticeSize * elementBytes);
-
-// 赋能—批处理
-gl.enableVertexAttribArray(a_Position);
-gl.enableVertexAttribArray(a_Color);
-
-
-render();
-function render() {
-  // 4.声明颜色RGBA
-  gl.clearColor(0, 0, 0, 1);
-
-  // 5.刷底色
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.drawArrays(gl.TRIANGLES, 0, vertices.length / sourceSize);
-}
-
+two.render();
 
 
