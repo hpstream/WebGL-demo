@@ -26,7 +26,7 @@ interface mapsParams {
   minFilter?: 'LINEAR' | 'NEAREST' | 'NEAREST_MIPMAP_NEAREST' | 'NEAREST_MIPMAP_LINEAR' | 'LINEAR_MIPMAP_NEAREST' | 'LINEAR_MIPMAP_LINEAR'
 }
 
-interface TowParams {
+export interface TowParams {
   gl: WebGLRenderingContext;
   program: WebGLProgram;
   type?: types;
@@ -50,9 +50,10 @@ const defAttr = () => ({
   categoryBytes: 0,
   attributes: {},
   uniforms: {},
+  maps: {}
 })
 
-export class Two<T extends TowParams, A extends T['attribute'], U extends T['uniforms']> implements TowParams {
+export class Two<T extends TowParams, A extends T['attribute'] = {}, U extends T['uniforms'] = {}> implements TowParams {
   gl: WebGLRenderingContext;
   type?: types;
   source: Float32Array | Float64Array;
@@ -112,6 +113,7 @@ export class Two<T extends TowParams, A extends T['attribute'], U extends T['uni
     Object.entries(uniforms).forEach(([key, val]) => {
       let uniform = gl.getUniformLocation(program, key);
       const { type, value } = val;
+      console.log(type.includes('Matrix'))
       if (type.includes('Matrix')) {
         gl[type](uniform, false, value);
       } else {
@@ -122,6 +124,8 @@ export class Two<T extends TowParams, A extends T['attribute'], U extends T['uni
   initMaps() {
 
     let { gl, program, maps } = this;
+
+    console.log(maps)
     Object.entries(maps).forEach(([key, val], ind) => {
       const {
         format = 'RGB',
@@ -163,7 +167,7 @@ export class Two<T extends TowParams, A extends T['attribute'], U extends T['uni
         gl[magFilter]
       )
 
-      if (minFilter && gl[minFilter] > gl.LINEAR) {
+      if (!minFilter || gl[minFilter] > gl.LINEAR) {
         gl.generateMipmap(gl.TEXTURE_2D)
       }
 

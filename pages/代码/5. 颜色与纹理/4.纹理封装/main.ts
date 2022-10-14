@@ -54,55 +54,22 @@ let two = new Two({
 
 
 let img = new Image();
-img.src = './img/600.png';
+img.src = './img/512.jpg';
 
 img.onload = () => {
-  /* 图像预处理 */
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-  /* 准备三个角色 */
-  gl.activeTexture(gl.TEXTURE0);
-  const texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    0,
-    gl.RGB,
-    gl.RGB,
-    gl.UNSIGNED_BYTE,
-    img
-  )
+  two.maps = {
+    'u_Sampler': {
+      image: img
+    }
+  }
+  two.initMaps();
+  render();
 
-  gl.texParameteri(
-    gl.TEXTURE_2D,
-    gl.TEXTURE_MIN_FILTER,
-    gl.LINEAR
-  )
-  gl.texParameteri(
-    gl.TEXTURE_2D,
-    gl.TEXTURE_WRAP_S,
-    gl.CLAMP_TO_EDGE
-  )
-  gl.texParameteri(
-    gl.TEXTURE_2D,
-    gl.TEXTURE_WRAP_T,
-    gl.CLAMP_TO_EDGE
-  )
-  // gl.texParameteri(
-  //   gl.TEXTURE_2D,
-  //   gl.TEXTURE_WRAP_S,
-  //   gl.MIRRORED_REPEAT
-  // )
-  // 非二次幂图像展示
-  // 镜像复制
-  // 复制
-
-
-  const u_Sampler = gl.getUniformLocation(program, 'u_Sampler')
-  gl.uniform1i(u_Sampler, 0)
+}
+function render() {
   gl.clearColor(0, 0, 0, 1)
   // 5.刷底色
   gl.clear(gl.COLOR_BUFFER_BIT);
-
   two.render();
 }
 

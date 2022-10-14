@@ -50,6 +50,7 @@ const defAttr = () => ({
   categoryBytes: 0,
   attributes: {},
   uniforms: {},
+  maps: {}
 })
 
 export class Two<T extends TowParams, A extends T['attribute'], U extends T['uniforms']> implements TowParams {
@@ -122,6 +123,8 @@ export class Two<T extends TowParams, A extends T['attribute'], U extends T['uni
   initMaps() {
 
     let { gl, program, maps } = this;
+
+    console.log(maps)
     Object.entries(maps).forEach(([key, val], ind) => {
       const {
         format = 'RGB',
@@ -163,7 +166,7 @@ export class Two<T extends TowParams, A extends T['attribute'], U extends T['uni
         gl[magFilter]
       )
 
-      if (minFilter && gl[minFilter] > gl.LINEAR) {
+      if (!minFilter || gl[minFilter] > gl.LINEAR) {
         gl.generateMipmap(gl.TEXTURE_2D)
       }
 

@@ -54,7 +54,7 @@ let two = new Two({
 
 
 let img = new Image();
-img.src = './img/600.png';
+img.src = './img/512.jpg';
 
 img.onload = () => {
   /* 图像预处理 */
@@ -87,11 +87,11 @@ img.onload = () => {
     gl.TEXTURE_WRAP_T,
     gl.CLAMP_TO_EDGE
   )
-  // gl.texParameteri(
-  //   gl.TEXTURE_2D,
-  //   gl.TEXTURE_WRAP_S,
-  //   gl.MIRRORED_REPEAT
-  // )
+  gl.texParameteri(
+    gl.TEXTURE_2D,
+    gl.TEXTURE_WRAP_S,
+    gl.MIRRORED_REPEAT
+  )
   // 非二次幂图像展示
   // 镜像复制
   // 复制
