@@ -24,7 +24,6 @@ gl.enable(gl.DEPTH_TEST);
 gl.enable(gl.CULL_FACE);// 可以让前面的物体挡住后面的物体
 
 
-
 //数据源
 const source = new Float32Array([
   -0.5, -0.5, -0.5, 0, 0,
