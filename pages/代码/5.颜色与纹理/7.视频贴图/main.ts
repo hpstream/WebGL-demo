@@ -28,15 +28,12 @@ gl.enable(gl.CULL_FACE);// 可以让前面的物体挡住后面的物体
 
 //数据源
 const source = new Float32Array([
-  -0.4, 0.8, 0, 1,
-  -0.4, -0.8, 0, 0.0,
-  0.4, 0.8, 1.0, 1,
-  0.4, -0.8, 1.0, 0.0,
+  -0.5, 0.4, 0, 1,
+  -0.5, -0.4, 0, 0.0,
+  0.5, 0.4, 1.0, 1,
+  0.5, -0.4, 1.0, 0.0,
 ]);
-let i = 0;
-let obj = {
-  ratio: 0
-}
+
 
 let two = new Two({
   gl,
@@ -58,82 +55,33 @@ let two = new Two({
     'u_ModelMatrix': {
       type: 'uniformMatrix4fv',
       value: new Matrix4().elements
-    },
-    'u_Ratio': {
-      type: 'uniform1f',
-      value: obj.ratio
     }
   }
 })
-let frame;
-
-Promise.all([
-  imgPromise('./img/dress.jpg'),
-  imgPromise('./img/mask-dress.jpg')
-]).then(([dress, mask]) => {
-  console.log(two)
+/* 建立video对象 */
+const video = document.createElement('video');
+video.src = 'http://img.yxyy.name/ripples.mp4';
+video.autoplay = true;
+video.muted = true;
+video.loop = true;
+video.setAttribute("crossOrigin", 'Anonymous');
+video.play();
+video.addEventListener('playing', () => {
   two.maps.u_Sampler = {
-    image: dress,
+    image: video,
+    wrapS: 'CLAMP_TO_EDGE',
+    wrapT: 'CLAMP_TO_EDGE',
+    minFilter: 'LINEAR'
   }
-  two.maps.u_Mask = {
-    image: mask
-  }
-  changeShow();
+
 })
-function changeShow() {
-  let pat1 = `./img/parttern/pattern${i % 5}.jpg`;
-  let pat2 = `./img/parttern/pattern${(i + 1) % 5}.jpg`;
 
-  Promise.all([
-    imgPromise(pat1),
-    imgPromise(pat2),
-  ]).then(([pattern1, pattern2]) => {
-
-
-    obj.ratio = 0;
-    two.maps.u_Pattern1 = {
-      image: pattern1
-    };
-    two.maps.u_Pattern2 = {
-      image: pattern2
-    };
-    two.initMaps();
-    gsap.to(obj, {
-      ratio: 1,
-      // repeat: 1,
-      // yoyo: true,
-      duration: 1.5,
-      onComplete: () => {
-        i++;
-        changeShow();
-      }
-
-    })
-
-  })
-}
 ani();
-
-let params = {
-  fn: () => {
-    // obj.ratio = 0;
-    i++;
-    changeShow();
-  }
-}
-let gui = new dat.GUI();
-gui.add(params, 'fn').name('换装');
-
-
-
 function ani() {
-  // console.log(obj.ratio)
-  two.uniforms.u_Ratio.value = obj.ratio;
-  two.initUniforms();
+  two.initMaps();
   render();
-  frame = requestAnimationFrame(ani);
+  requestAnimationFrame(ani);
 }
-
 
 function render() {
   gl.clearColor(0, 0, 0, 1)
@@ -141,9 +89,4 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
   two.render();
 }
-
-
-
-
-
 
