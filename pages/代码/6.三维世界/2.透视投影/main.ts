@@ -27,7 +27,7 @@ const program = initShaders(gl, vertexShader, fragmentShader);
 
 // 由于透视投影与视点的位置有关，所有需要进行矩阵乘法
 
-let eye = new Vector3(-0.5, 0.0, 3.0);
+let eye = new Vector3(0.8, 0.8, 4.0);
 let target = new Vector3(0, 0, 0.0);
 let up = new Vector3(0, 1, 0);
 
