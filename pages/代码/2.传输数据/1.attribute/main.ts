@@ -24,7 +24,7 @@ const a_Position = gl.getAttribLocation(program, 'a_Position');
 const a_PointSize = gl.getAttribLocation(program, 'a_PointSize');
 
 // gl.vertexAttrib1f(a_Position, 1);
-gl.vertexAttrib2f(a_Position, 1.0, 1.0);
+gl.vertexAttrib2f(a_Position, 0.0, 0.0);
 // gl.vertexAttrib3f(a_Position, 1.0, 1.0, 1.0);
 // gl.vertexAttrib4f(a_Position, 1.0, 1.0, 1.0, 1.0);
 
